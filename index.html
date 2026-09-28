@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snooker Café Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── STOCK BAR ── -->
+  <header class="stock-bar">
+    <div class="stock-bar__left">
+      <!-- <span class="stock-bar__label">STOCK</span> -->
+       <img src="logo.jpg" alt="logo" width="86px">
+      <div class="stock-list" id="stockList"></div>
+    </div>
+       <img src="logo-name.jpg" alt="logo" width="500px" height="100px" style="object-fit: cover;">
+    <div class="stock-bar__actions">
+      <button class="btn-counter" id="btnCounter">🛒 Counter Sale</button>
+      <button class="btn-restock" id="btnRestock">＋ Restock</button>
+      <a href="tally.html">+</a>
+    </div>
+  </header>
+
+  <!-- ── MAIN ── -->
+  <main class="tables-area" id="tablesArea"></main>
+
+  <!-- ── ADD-ITEM MODAL ── -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2 class="modal__title">Add Item</h2>
+      <p class="modal__table-name" id="modalTableName"></p>
+      <div class="menu-grid" id="menuGrid"></div>
+      <button class="btn-modal-close" id="btnModalClose">Done</button>
+    </div>
+  </div>
+
+  <!-- ── RESTOCK MODAL ── -->
+  <div class="modal-overlay" id="restockOverlay">
+    <div class="modal">
+      <h2 class="modal__title">Restock Items</h2>
+      <div class="restock-grid" id="restockGrid"></div>
+      <button class="btn-modal-close" id="btnRestockClose">Save</button>
+    </div>
+  </div>
+
+  <!-- ── END SESSION MODAL ── -->
+  <div class="modal-overlay" id="endOverlay">
+    <div class="modal modal--bill">
+      <h2 class="modal__title">Session Bill</h2>
+      <p class="modal__table-name" id="billTableName"></p>
+      <div class="bill-body" id="billBody"></div>
+      <div class="bill-total" id="billTotal"></div>
+      <div class="bill-actions">
+        <button class="btn-modal-close btn--secondary" id="btnBillCancel">Cancel</button>
+        <button class="btn-modal-close" id="btnBillConfirm">Confirm End</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COUNTER SALE MODAL ── -->
+  <div class="modal-overlay" id="counterOverlay">
+    <div class="modal">
+      <h2 class="modal__title">🛒 Counter Sale</h2>
+      <p class="modal__table-name">Select items to sell</p>
+      <div class="menu-grid" id="counterMenuGrid"></div>
+      <div class="bill-actions">
+        <button class="btn-modal-close btn--secondary" id="btnCounterCancel">Cancel</button>
+        <button class="btn-modal-close" id="btnCounterBill">Generate Bill</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COUNTER BILL MODAL ── -->
+  <div class="modal-overlay" id="counterBillOverlay">
+    <div class="modal modal--bill">
+      <h2 class="modal__title">Counter Bill</h2>
+      <p class="modal__table-name" id="counterBillTime"></p>
+      <div class="bill-body" id="counterBillBody"></div>
+      <div class="bill-total" id="counterBillTotal"></div>
+      <div class="bill-actions">
+        <button class="btn-modal-close btn--secondary" id="btnCounterBillBack">← Back</button>
+        <button class="btn-modal-close" id="btnCounterBillConfirm">✓ Confirm Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

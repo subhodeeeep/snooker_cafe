@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Daily Tally</title>
+<link rel="stylesheet" href="tally.css" />
+</head>
+
+<body>
+
+<div class="page-shell">
+  <header class="page-heading">
+    <h1>📊 Daily Revenue Dashboard</h1>
+    <p>Live tally of table sessions, counter sales, and online transactions for the day.</p>
+  </header>
+
+  <section class="summary">
+
+    <div class="summary-card">
+      <h3>Total Revenue</h3>
+      <h2 id="totalRevenue">₹0</h2>
+    </div>
+
+    <div class="summary-card">
+      <h3>Table Revenue</h3>
+      <h2 id="tableRevenue">₹0</h2>
+    </div>
+
+    <div class="summary-card">
+      <h3>Counter Revenue</h3>
+      <h2 id="counterRevenue">₹0</h2>
+    </div>
+
+  </section>
+
+  <div class="card">
+    <h2>Table Sessions</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Table</th>
+                <th>Customer</th>
+                <th>Duration</th>
+                <th>Items</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+
+        <tbody id="tableHistory"></tbody>
+    </table>
+</div>
+
+  <div class="card">
+    <h2>Counter Sales</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Items</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+
+        <tbody id="counterHistory"></tbody>
+    </table>
+</div>
+
+  <div class="card">
+    <h2>Online Transactions</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Source</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+
+        <tbody id="onlineHistory"></tbody>
+    </table>
+</div>
+</div>
+
+<script>
+
+const transactions =
+JSON.parse(localStorage.getItem('transactions') || '[]');
+
+let totalRevenue = 0;
+let tableRevenue = 0;
+let counterRevenue = 0;
+
+const tableBody =
+document.getElementById('tableHistory');
+
+const counterBody =
+document.getElementById('counterHistory');
+
+const onlineBody =
+document.getElementById('onlineHistory');
+
+transactions
+.sort((a,b)=>a.billedAt-b.billedAt)
+.forEach(t=>{
+
+    totalRevenue += t.total;
+
+    const time =
+    new Date(t.billedAt).toLocaleTimeString();
+
+    if(t.type==="table"){
+
+        tableRevenue += t.total;
+
+        const tr =
+        document.createElement('tr');
+
+        tr.innerHTML = `
+            <td>${time}</td>
+            <td>${t.table}</td>
+            <td>${t.customer || "-"}</td>
+            <td>${formatDuration(t.durationMs)}</td>
+            <td>${formatItems(t.items)}</td>
+            <td>₹${t.total}</td>
+        `;
+
+        tableBody.appendChild(tr);
+    }
+
+    if(t.type==="counter"){
+
+        counterRevenue += t.total;
+
+        const tr =
+        document.createElement('tr');
+
+        tr.innerHTML = `
+            <td>${time}</td>
+            <td>${formatItems(t.items)}</td>
+            <td>₹${t.total}</td>
+        `;
+
+        counterBody.appendChild(tr);
+    }
+
+    if((t.online || 0) > 0){
+
+        const tr =
+        document.createElement('tr');
+
+        tr.innerHTML = `
+            <td>${time}</td>
+            <td>${t.table || "Counter"}</td>
+            <td>₹${t.online}</td>
+        `;
+
+        onlineBody.appendChild(tr);
+    }
+
+});
+
+document.getElementById('totalRevenue')
+.textContent = "₹" + totalRevenue;
+
+document.getElementById('tableRevenue')
+.textContent = "₹" + tableRevenue;
+
+document.getElementById('counterRevenue')
+.textContent = "₹" + counterRevenue;
+
+function formatItems(items){
+
+    if(!items || items.length===0)
+        return "-";
+
+    return items.map(i=>{
+
+        if(i.menuId)
+            return i.menuId + " x" + i.qty;
+
+        return i.name + " x" + i.qty;
+
+    }).join(", ");
+
+}
+
+function formatDuration(ms){
+
+    if(!ms) return "-";
+
+    const mins =
+    Math.floor(ms/60000);
+
+    const hrs =
+    Math.floor(mins/60);
+
+    const rem =
+    mins%60;
+
+    return `${hrs}h ${rem}m`;
+}
+
+</script>
+
+</body>
+</html>
